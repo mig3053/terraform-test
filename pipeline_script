@@ -1,0 +1,20 @@
+
+node {
+  stage('generate_temporary_aws_credentials') {
+         build "dsl-jobs/cluster-pipelines/mvp01.dev.nvt.mckinsey.cloud/internal/assume_role"
+  }
+  stage('create_s3') {
+         build job: "dsl-jobs/backing-services/mvp01.dev.nvt.mckinsey.cloud/internal/create_s3", parameters:
+                      [
+                              string(name: 'BRANCH', value: "${BRANCH}"),
+                              string(name: 'TERRAFORM_APPLY', value: "${TERRAFORM_APPLY}"),
+                              string(name: 'CLUSTER_NAME', value: "${CLUSTER_NAME}"),
+                              string(name: 'SOLUTION', value: "${SOLUTION}"),
+                              string(name: 'TENANT_ID', value: "${TENANT_ID}"),
+                              string(name: 'REGION', value: "${REGION}"),
+                              string(name: 'K8S_ENVIRONMENT', value: "${K8S_ENVIRONMENT}"),
+                              string(name: 'KMS_KEY_NAME', value: "${KMS_KEY_NAME}"),
+                              string(name: 'BUCKET_NAME', value: "${BUCKET_NAME}") 
+                      ]
+  }   
+}
